@@ -1,0 +1,31 @@
+import { StatusBar } from 'expo-status-bar';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import { titulo } from './util.js';
+import titulo_padrao  from './util.js';
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>{titulo}</Text>
+      <Text style={{margin: 20}}>{titulo_padrao}</Text>
+      <Button title="clique aqui..."></Button>
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#eaefff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  text: {
+    margin: 20,
+    fontSize: 26,
+    color: '#5661c0',
+  },
+
+});
