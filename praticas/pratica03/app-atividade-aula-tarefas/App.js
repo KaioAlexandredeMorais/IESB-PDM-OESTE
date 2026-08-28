@@ -1,44 +1,27 @@
-import { TextInput, Button, StyleSheet, Text, View, ScrollView } from 'react-native';
-import { rotulo_input_meta, rotulo_btn_cadastro_meta, rotulo_lista_metas } from './mensagens.js'
+import { StyleSheet, View } from 'react-native';
 import { useState } from 'react';
+import MetaList from './components/Metalist.js';
+import MetaInput from './components/Metainput.js';
 
 export default function App() {
 
-  const [inputMetaText  , setInputMetaText] = useState('');
   const [metas, setMetas] = useState([]);
 
-  function metaInputHandler(inputText) {
-    setInputMetaText(inputText);
-  };
-
-  function adicionarMetaHandler() {
-    if (inputMetaText.trim() === '') {
+  function adicionarMetaHandler(inputMeta) {
+    if (inputMeta.trim() === '') {
       alert('Digite uma meta válida!');
       return;
     }
-    setMetas([...metas, inputMetaText]);
-  };
+    setMetas([...metas, inputMeta]);
+  }
   
   return (
     <View style={styles.mainContainer}>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <View style={{width: '65%'}}>
-          <TextInput onChangeText={metaInputHandler} style={styles.inputText} placeholder={rotulo_input_meta} />
-        </View>
-
-        <View style={{width: '30%'}}>
-          <Button onPress={adicionarMetaHandler} title={rotulo_btn_cadastro_meta} />
-        </View>
-      </View>
+      
+        <MetaInput onAddMeta={adicionarMetaHandler} />
       
       <View style={styles.metaContainer}>
-        <View style={{width: 250, alignSelf: 'center'}}>
-          <Text style={styles.Text}>{rotulo_lista_metas}</Text>
-        </View>
-
-        <ScrollView>
-          {metas.map((meta, index) => <Text style={styles.item} key={index}>{meta}</Text>)}
-        </ScrollView>
+          <MetaList array={metas} />
       </View>
     </View>
   );
@@ -53,29 +36,6 @@ const styles = StyleSheet.create({
   },
   metaContainer: {
     flex: 1,
-  },
-  inputText: {
-    backgroundColor: '#eaefff',
-    borderColor: '#364277',
-    borderWidth: 2,
-    borderRadius: 5,
-    padding: 5,
-    marginBottom: 10,
-    fontSize: 18,
-    color: '#364277',
-  },
-  Text: {
-    backgroundColor: '#364277',
-    borderColor: '#29325b',
-    borderWidth: 3,
-    borderRadius: 20,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#ffffff',
-    padding: 3,
-    marginBottom: 10,
-    marginTop: 20,
   },
   item: {
     margin: 8,
