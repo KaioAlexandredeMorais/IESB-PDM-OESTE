@@ -1,4 +1,4 @@
-import { View, ScrollView, StyleSheet, Text } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, Pressable } from 'react-native';
 import { rotulo_lista_metas } from '../mensagens';
 
 function MetaList(props) {
@@ -9,7 +9,15 @@ function MetaList(props) {
             </View>
 
             <ScrollView>
-                {props.array.map((meta, index) => <Text key={index} style={styles.item}>{meta}</Text>)}
+                {props.array.map((meta) => {
+                    return (
+                        <View key={meta.id} style={styles.item}>
+                            <Pressable android_ripple={{color: 'yellow'}} key={meta.id} onPress={() => props.onDeleteItem(meta.id)}>
+                                <Text style={{padding: 10, alignSelf: 'center', fontWeight: 'bold', color: '#364277'}}>{meta.texto}</Text>
+                            </Pressable>
+                        </View>
+                    );
+                })}
             </ScrollView>
         </View>
     );
@@ -34,13 +42,10 @@ const styles = StyleSheet.create({
     item: {
         margin: 8,
         borderRadius: 5,
-        padding: 10,
         fontSize: 16,
         backgroundColor: '#98a5dc',
         borderColor: '#364277',
         borderWidth: 2,
         color: '#364277',
-        fontWeight: 'bold',
-        textAlign: 'center',
     },
 });

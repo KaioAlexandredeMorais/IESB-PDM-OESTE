@@ -1,79 +1,38 @@
-# 💻 Prática 05: FlatList e App que Não Esquece
+MetasSemestre
+=============
 
-Nesta prática o To-Do ganha lista eficiente e persistência local. **Ainda não** vamos extrair componentes — isso é a Prática 06.
+Como rodar
+----------
 
-## 🎯 Objetivos
-
-* Substituir `.map()` por `FlatList`.
-* Salvar e carregar tarefas com AsyncStorage + `useEffect`.
-* Validar que fechar e reabrir o app mantém os dados.
-
----
-
-## 📦 Fluxo Git
-
-1. Crie a Issue da **Prática 05**.
-2. Branch:
-
-```bash
-git checkout -b feature/pratica05
-```
-
-3. Trabalhe em `praticas/pratica05` (evolua a base da Prática 04).
-
-```bash
-npm install
+npx expo install @react-native-async-storage/async-storage react-native-safe-area-context
 npx expo start
-```
 
----
+Estrutura
+---------
 
-## 🛠️ Parte A — FlatList
+- App.js: estado principal (inputMetaText, metas), handlers de adicionar, remover e alternar concluída, e os dois useEffect de persistência.
+- components/MetaInput.js: TextInput + Pressable de adicionar, recebe value, onChangeText e onAdd por props.
+- components/MetaList.js: FlatList das metas, recebe metas, onDelete e onToggle por props.
+- labels.js: textos usados na tela e nas mensagens de erro.
 
-1. Remova o `.map()` da lista.
-2. Importe `FlatList` de `react-native`.
-3. Configure:
+Onde está o useEffect de carga
+-------------------------------
 
-* `data={tasks}`
-* `keyExtractor={(item) => item.id}`
-* `renderItem={...}` desenhando cada tarefa (card ainda pode ficar inline no `App`)
+No App.js, o primeiro useEffect roda uma vez ao montar o componente (array de dependências vazio). Ele busca a chave '@metas_semestre' no AsyncStorage e, se existir algo salvo, faz JSON.parse e popula o estado metas.
 
-4. Teste adicionando **muitas** tarefas (15+) e confirme a rolagem suave.
+Onde está o useEffect de salvamento
+-------------------------------------
 
----
+O segundo useEffect tem [metas, carregando] como dependências, então roda toda vez que a lista de metas muda. Ele ignora a primeira execução (enquanto carregando ainda é true) para não sobrescrever o storage com uma lista vazia antes da carga terminar, e depois disso salva a lista atual com JSON.stringify.
 
-## 🛠️ Parte B — AsyncStorage
+Prints
+------
 
-1. Pare o bundler (Ctrl+C) e instale:
+## Lista Vazia
+![alt text](prints/lista-vazia.png)
 
-```bash
-npx expo install @react-native-async-storage/async-storage
-```
+## Lista com Registros
+![alt text](prints/lista-cheia.png)
 
-2. Crie `saveTasks` (async): grave a lista com `setItem` + `JSON.stringify`.
-3. Chame `saveTasks` após adicionar e após deletar (com a lista já atualizada).
-4. Crie `loadTasks` (async): leia com `getItem`, faça `JSON.parse` se houver valor, e use `setTasks`.
-5. No `useEffect` com `[]`, chame `loadTasks()` na montagem.
-
-### Teste extremo
-
-Adicione 3 tarefas → feche o app por completo (remover dos recentes) → abra de novo → as tarefas devem continuar lá.
-
----
-
-## ✅ Critérios de entrega
-
-* [ ] `FlatList` rolando com muitos itens
-* [ ] Persistência: fechar e reabrir mantém as tarefas
-* [ ] Add e delete continuam funcionando
-* [ ] Issue, branch `feature/pratica05`, commit, push e Pull Request
-
-### Commit sugerido
-
-```bash
-git add .
-git commit -m "Feat: Adiciona FlatList e AsyncStorage para persistir tarefas"
-git push origin feature/pratica05
-```
-
-Na **Aula 06**, vamos **organizar o código**: extrair o card da tarefa para um componente reutilizável com props.
+## Lista com Registros Concluídos
+![alt text](prints/registros-concluidos.png)

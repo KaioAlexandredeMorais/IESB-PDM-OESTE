@@ -1,7 +1,8 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import { useState } from 'react';
 import MetaList from './components/Metalist.js';
 import MetaInput from './components/Metainput.js';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
 
@@ -12,18 +13,29 @@ export default function App() {
       alert('Digite uma meta válida!');
       return;
     }
-    setMetas([...metas, inputMeta]);
+    const novaMeta = { id: Math.random().toString(), texto: inputMeta };
+    setMetas([...metas, novaMeta]);
+  }
+
+  function deletarMetaHandler(id) {
+    console.log(id);
+    const novasMetas = metas.filter((meta) => meta.id !== id);
+    setMetas(novasMetas);
   }
   
   return (
-    <View style={styles.mainContainer}>
-      
-        <MetaInput onAddMeta={adicionarMetaHandler} />
-      
-      <View style={styles.metaContainer}>
-          <MetaList array={metas} />
-      </View>
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.mainContainer}>
+            <Image source={require('./assets/shedinja.gif')} style={styles.image} resizeMode="contain"/>
+            <MetaInput onAddMeta={adicionarMetaHandler} />
+          
+          <View style={styles.metaContainer}>
+              <MetaList array={metas} onDeleteItem={deletarMetaHandler} />
+          </View>
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -49,5 +61,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  imageContainer: {
+    alignItems: 'center',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+    borderRadius: '50%',
+    borderWidth: 2,
+    borderColor: '#364277',
+    backgroundColor: '#eaefff',
+  },
 });
